@@ -1,8 +1,9 @@
-public class PIEZAS {
+public abstract class PIEZAS {
 
     private boolean blanco;
     private int x;
     private int y;
+    private TABLERO tablero;
 
     public int getX() {
         return x;
@@ -27,9 +28,27 @@ public class PIEZAS {
         this.blanco = blanco;
     }
 
-    public PIEZAS(int x, int y,boolean blanco) {
+    public PIEZAS(int x, int y,boolean blanco, TABLERO tablero) {
         this.x = x;
         this.y = y;
         this.blanco=blanco;
+        this.tablero=tablero;
+        tablero.getTablero()[x][y] = this;
+    }
+    public abstract char getChar();
+    public abstract boolean movimientoValido(int nuevaX, int nuevaY);
+
+    public boolean mover(int nuevaX, int nuevaY) {
+        if (movimientoValido(nuevaX, nuevaY)) {
+            // actualizar tablero
+            tablero.getTablero()[x][y] = null;
+            tablero.getTablero()[nuevaX][nuevaY] = this;
+
+            // actualizar coordenadas de la pieza
+            x = nuevaX;
+            y = nuevaY;
+            return true;
+        }
+        return false;
     }
 }
