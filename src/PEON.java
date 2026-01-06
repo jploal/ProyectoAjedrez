@@ -1,20 +1,40 @@
 public class PEON extends PIEZAS{
-    /*public PIEZA(String Cc4){
-        char a = Pc4.charAt(0);
-        char b = Pc4.charAt(1);
-        char c = Pc4.charAt(2);
-        SWITCH (a){
-            case 'P' -> (PEON(Integer.parseInt(b),Integer.parseInt(C),));
-        }*/
-    public PEON(int x, int y, boolean blanco) {
-        super(x, y, blanco);
+
+    public PEON(int x, int y, boolean blanco, TABLERO tablero) {
+        super(x, y, blanco, tablero);
+    }
+    @Override
+    public char getChar() {
+        return isBlanco() ? '\u2659' : '\u265F';
     }
 
     @Override
-    public String toString() {
-        return isBlanco() ? "P" : "p";
-    }
-    void MovimientoP(){
+    public boolean movimientoValido(int nuevaX, int nuevaY) {
 
+        int xActual = getX();
+        int yActual = getY();
+
+        // Mover recto, misma columna
+        if (yActual != nuevaY) return false;
+
+        if (isBlanco()) {
+            // Blancos suben (x disminuye)
+            if (xActual == 6 && nuevaX == 4) return true; // primer movimiento, 2 pasos
+            if (nuevaX == xActual - 1) return true;       // 1 paso
+        } else {
+            // Negros bajan (x aumenta)
+            if (xActual == 1 && nuevaX == 3) return true; // primer movimiento, 2 pasos
+            if (nuevaX == xActual + 1) return true;       // 1 paso
+        }
+
+        return false;
+    }
+    public boolean MovimientoP(int nuevaX, int nuevaY) {
+        if (movimientoValido(nuevaX, nuevaY)) {
+            setX(nuevaX);
+            setY(nuevaY);
+            return true;
+        }
+        return false;
     }
 }
