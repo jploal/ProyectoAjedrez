@@ -20,7 +20,7 @@ public class TABLERO {
                     if (tablero[fila][col] != null) {
                         System.out.print("[" + tablero[fila][col].getChar() + "]");
                     } else {
-                        System.out.print("[ ]");
+                        System.out.print("[ㅤ]");
                     }
                 }
                 System.out.println();
