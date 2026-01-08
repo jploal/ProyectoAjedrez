@@ -112,7 +112,7 @@ public class JUEGO {
 
             System.out.println("Movimiento realizado: " + desde + " → " + hasta);
 
-            if (JAQUE.hayJaque(!blancasTurno, tablero)) {
+            if (tablero.hayJaque(!blancasTurno)) {
                 System.out.println("¡JAQUE!");
             }
     
