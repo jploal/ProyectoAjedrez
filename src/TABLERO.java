@@ -1,4 +1,9 @@
 public class TABLERO {
+    private static final String RESET = "\u001B[0m";
+    private static final String FONDO_BLANCO = "\u001B[47m";
+    private static final String FONDO_NEGRO = "\u001B[40m";
+    private static final String TEXTO_BLANCO = "\u001B[37m";
+    private static final String TEXTO_NEGRO = "\u001B[30m";
     public PIEZAS[][] getTablero() {
         return tablero;
     }
@@ -15,16 +20,27 @@ public class TABLERO {
     }
 
         public void mostrarTABLERO() {
+            int numerico = 8;
             for (int fila = 0; fila < 8; fila++) {
                 for (int col = 0; col < 8; col++) {
-                    if (tablero[fila][col] != null) {
-                        System.out.print("[" + tablero[fila][col].getChar() + "]");
+
+                    boolean casillaBlanca = (fila + col) % 2 ==0;
+                    String fondo = casillaBlanca ? FONDO_BLANCO : FONDO_NEGRO;
+
+                    PIEZAS pieza = tablero[fila][col];
+                    if (pieza != null) {
+                        String colorTexto = pieza.isBlanco() ? TEXTO_NEGRO : TEXTO_BLANCO;
+                        System.out.print(fondo + colorTexto + " " + pieza.getChar() + " " + RESET);
                     } else {
-                        System.out.print("[ㅤ]");
+                        System.out.print(fondo + " ㅤ " + RESET);
                     }
+
                 }
+
+                System.out.print(numerico--);
                 System.out.println();
             }
+            System.out.println("ㅤA ㅤB ㅤC ㅤD ㅤE ㅤF ㅤG ㅤH ");
         }
     // vacía el tablero
     public void limpiarTablero() {
