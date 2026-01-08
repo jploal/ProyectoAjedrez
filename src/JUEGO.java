@@ -4,20 +4,16 @@ public class JUEGO {
         private static Scanner sc = new Scanner(System.in);
 
         public static void jugar() {
-            // 1️⃣ Inicializar tablero y piezas
+
             inicializarTablero();
 
-            // 2️⃣ Mostrar tablero inicial
             System.out.println("Tablero inicial:");
             tablero.mostrarTABLERO();
 
-            // 3️⃣ Preguntar qué bando juega
             boolean blancasTurno = pedirTurno();
 
-            // 4️⃣ Ejecutar un movimiento
             ejecutarMovimiento(blancasTurno);
 
-            // 5️⃣ Mostrar tablero actualizado
             System.out.println("Tablero después del movimiento:");
             tablero.mostrarTABLERO();
         }
