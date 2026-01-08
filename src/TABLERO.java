@@ -126,6 +126,51 @@ public class TABLERO {
                 x += dx;
                 y += dy;
             }
+
+          
+        public boolean hayJaque(boolean reyBlanco) {
+
+        REY rey = null;
+
+       
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                PIEZAS p = tablero[i][j];
+                if (p instanceof REY && p.isBlanco() == reyBlanco) {
+                    rey = (REY) p;
+                }
+            }
+        }
+
+        if (rey == null) return false;
+
+        int rx = rey.getX();
+        int ry = rey.getY();
+
+       
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+
+                PIEZAS p = tablero[i][j];
+
+                if (p != null && p.isBlanco() != reyBlanco) {
+
+                    if (!p.movimientoValido(rx, ry)) continue;
+
+                    if (p instanceof CABALLO || p instanceof REY) {
+                        return true;
+                    }
+
+                    if (caminoLibre(p.getX(), p.getY(), rx, ry)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+    
             
         return true;
     }
