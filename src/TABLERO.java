@@ -14,18 +14,18 @@ public class TABLERO {
         limpiarTablero();
     }
 
-        public void mostrarTABLERO() {
-            for (int fila = 0; fila < 8; fila++) {
-                for (int col = 0; col < 8; col++) {
-                    if (tablero[fila][col] != null) {
-                        System.out.print("[" + tablero[fila][col].getChar() + "]");
-                    } else {
-                        System.out.print("[ㅤ]");
-                    }
+    public void mostrarTABLERO() {
+        for (int fila = 0; fila < 8; fila++) {
+            for (int col = 0; col < 8; col++) {
+                if (tablero[fila][col] != null) {
+                    System.out.print("[" + tablero[fila][col].getChar() + "]");
+                } else {
+                    System.out.print("[ㅤ]");
                 }
-                System.out.println();
             }
+            System.out.println();
         }
+    }
     // vacía el tablero
     public void limpiarTablero() {
         for (int i = 0; i < 8; i++)
@@ -113,9 +113,21 @@ public class TABLERO {
             if (torresNegras > 2 || caballosNegras > 2 || alfilesNegras > 2 || damasNegras > 1)
                 return false;
         }
+        
+        public boolean caminoLibre(int x1, int y1, int x2, int y2) {
+            int dx = Integer.compare(x2, x1);
+            int dy = Integer.compare(y2, y1);
 
+            int x = x1 + dx;
+            int y = y1 + dy;
+
+            while (x != x2 || y != y2) {
+                if (tablero[x][y] != null) return false;
+                x += dx;
+                y += dy;
+            }
+            
         return true;
     }
-
-
+        
 }
