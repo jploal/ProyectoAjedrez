@@ -51,16 +51,31 @@ public class JUEGO {
         }
         // Pedir que bando juega
         private static boolean pedirTurno() {
-            while (true) {
+            boolean turnoblancas = false;
+            boolean entradaValida = false;
+
+            while (!entradaValida) {
                 System.out.println("¿Qué bando juega? (blancas/negras):");
                 String turno = sc.nextLine().trim().toLowerCase();
-                if (turno.equals("blancas")) return true;
-                if (turno.equals("negras")) return false;
-                System.out.println("Entrada no válida, escribe 'blancas' o 'negras'.");
+
+                if (turno.equals("blancas")) {
+                    turnoblancas = true;
+                    entradaValida = true;
+                }
+                else if (turno.equals("negras")) {
+                    turnoblancas = false;
+                    entradaValida = true;
+                }
+                else {
+                    System.out.println("Entrada no válida, escribe 'blancas' o 'negras'.");
+                }
             }
+
+            return turnoblancas;
         }
 
-        // Ejecutar un movimiento de la pieza elegida
+
+    // Ejecutar un movimiento de la pieza elegida
         private static void ejecutarMovimiento(boolean blancasTurno) {
             System.out.println((blancasTurno ? "Blancas" : "Negras") + " mueve:");
             System.out.println("Introduce movimiento en notación algebraica (ej: e2 e4):");
@@ -96,7 +111,12 @@ public class JUEGO {
             }
 
             System.out.println("Movimiento realizado: " + desde + " → " + hasta);
-        }
+
+            if (tablero.hayJaque(!blancasTurno)) {
+                System.out.println("¡JAQUE!");
+            }
+    
+            }
 
 }
 
