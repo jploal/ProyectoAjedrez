@@ -74,7 +74,8 @@ public class JUEGO {
             return turnoblancas;
         }
 
-        // Ejecutar un movimiento de la pieza elegida
+
+    // Ejecutar un movimiento de la pieza elegida
         private static void ejecutarMovimiento(boolean blancasTurno) {
             System.out.println((blancasTurno ? "Blancas" : "Negras") + " mueve:");
             System.out.println("Introduce movimiento en notación algebraica (ej: e2 e4):");
