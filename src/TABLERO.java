@@ -134,7 +134,7 @@ public class TABLERO {
             y += dy;
         }
 
-        return true; // ✅ falta este return
+        return true; 
     }
 
     public boolean hayJaque(boolean reyBlanco) {
