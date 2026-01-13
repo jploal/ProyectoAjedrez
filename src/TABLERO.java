@@ -41,6 +41,7 @@ public class TABLERO {
                     } else {
                         System.out.print(fondo + " ㅤ " + RESET);
                     }
+
                 }
                 System.out.print(BORDE +TEXTO_NEGRO +numerico-- + " ㅤ" + RESET);
                 System.out.println();
