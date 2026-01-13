@@ -39,16 +39,23 @@ public abstract class PIEZAS {
     public abstract boolean movimientoValido(int nuevaX, int nuevaY);
 
     public boolean mover(int nuevaX, int nuevaY) {
-        if (movimientoValido(nuevaX, nuevaY)) {
-            // actualizar tablero
-            tablero.getTablero()[x][y] = null;
-            tablero.getTablero()[nuevaX][nuevaY] = this;
 
-            // actualizar coordenadas de la pieza
-            x = nuevaX;
-            y = nuevaY;
-            return true;
-        }
+    if (!movimientoValido(nuevaX, nuevaY)) return false;
+
+    PIEZAS destino = tablero.getTablero()[nuevaX][nuevaY];
+
+  
+    if (destino != null && destino.isBlanco() == this.isBlanco()) {
         return false;
     }
+
+    tablero.getTablero()[x][y] = null;
+    tablero.getTablero()[nuevaX][nuevaY] = this;
+
+    x = nuevaX;
+    y = nuevaY;
+
+    return true;
+    }
+        }
 }

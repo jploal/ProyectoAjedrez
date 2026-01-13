@@ -6,7 +6,8 @@ public class TABLERO {
     private static final String TEXTO_NEGRO = "\u001B[30m";
     private static final String BORDE = "\u001B[42m";
     private static final int ANCHO = 6;
-    public PIEZAS[][] getTablero() {
+    
+  public PIEZAS[][] getTablero() {
         return tablero;
     }
 
@@ -52,13 +53,16 @@ public class TABLERO {
             System.out.println();
             System.out.println("ㅤㅤㅤA ㅤB ㅤC ㅤD ㅤE ㅤF ㅤG ㅤH ");
         }
+    }
+
     // vacía el tablero
     public void limpiarTablero() {
         for (int i = 0; i < 8; i++)
             for (int j = 0; j < 8; j++)
                 tablero[i][j] = null;
     }
-    //traduce algebraico a array
+
+    // Traduce algebraico a array
     public PIEZAS getPiezaDesdeAlgebraica(String pos) {
         int x, y;
         if (pos.length() == 3) {
@@ -70,6 +74,7 @@ public class TABLERO {
         }
         return tablero[x][y];
     }
+
     public boolean validarComposicion() {
 
         int reyesBlancos = 0;
@@ -82,7 +87,7 @@ public class TABLERO {
         int damasBlancas = 0, damasNegras = 0;
 
         boolean[][] ocupadas = new boolean[8][8];
-        //recorrer tablero leyendo instancias de objetos, cuenta cada tipo de pieza
+        // recorrer tablero leyendo instancias de objetos, cuenta cada tipo de pieza
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 PIEZAS p = tablero[i][j];
@@ -143,5 +148,61 @@ public class TABLERO {
         return true;
     }
 
+    public boolean caminoLibre(int x1, int y1, int x2, int y2) {
+        int dx = Integer.compare(x2, x1);
+        int dy = Integer.compare(y2, y1);
+
+        int x = x1 + dx;
+        int y = y1 + dy;
+
+        while (x != x2 || y != y2) {
+            if (tablero[x][y] != null) return false;
+            x += dx;
+            y += dy;
+        }
+
+        return true; 
+    }
+
+    public boolean hayJaque(boolean reyBlanco) {
+
+        REY rey = null;
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                PIEZAS p = tablero[i][j];
+                if (p instanceof REY && p.isBlanco() == reyBlanco) {
+                    rey = (REY) p;
+                }
+            }
+        }
+
+        if (rey == null) return false;
+
+        int rx = rey.getX();
+        int ry = rey.getY();
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+
+                PIEZAS p = tablero[i][j];
+
+                if (p != null && p.isBlanco() != reyBlanco) {
+
+                    if (!p.movimientoValido(rx, ry)) continue;
+
+                    if (p instanceof CABALLO || p instanceof REY) {
+                        return true;
+                    }
+
+                    if (caminoLibre(p.getX(), p.getY(), rx, ry)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
 }
