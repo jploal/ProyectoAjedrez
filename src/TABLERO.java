@@ -5,7 +5,7 @@ public class TABLERO {
     private static final String TEXTO_BLANCO = "\u001B[37m";
     private static final String TEXTO_NEGRO = "\u001B[30m";
     private static final String BORDE = "\u001B[42m";
-    private static final int ANCHO = 29;
+    private static final int ANCHO = 6;
     public PIEZAS[][] getTablero() {
         return tablero;
     }
@@ -24,12 +24,12 @@ public class TABLERO {
         public void mostrarTABLERO() {
             int numerico = 8;
             for (int i = 0; i < ANCHO + 4; i++) {
-                System.out.print(BORDE + " " + RESET);
+                System.out.print(BORDE + " ㅤ " + RESET);
             }
             System.out.println();
 
             for (int fila = 0; fila < 8; fila++) {
-                System.out.print(BORDE + "  " + RESET);
+                System.out.print(BORDE + " ㅤ " + RESET);
                 for (int col = 0; col < 8; col++) {
                     boolean casillaBlanca = (fila + col) % 2 ==0;
                     String fondo = casillaBlanca ? FONDO_BLANCO : FONDO_NEGRO;
@@ -43,14 +43,14 @@ public class TABLERO {
                     }
 
                 }
-                System.out.print(BORDE + "  " + RESET + numerico--);
+                System.out.print(BORDE +TEXTO_NEGRO +numerico-- + " ㅤ" + RESET);
                 System.out.println();
             }
             for (int i = 0; i < ANCHO + 4; i++) {
-                System.out.print(BORDE + " " + RESET);
+                System.out.print(BORDE + " ㅤ " + RESET);
             }
             System.out.println();
-            System.out.println("ㅤA ㅤB ㅤC ㅤD ㅤE ㅤF ㅤG ㅤH ");
+            System.out.println("ㅤㅤㅤA ㅤB ㅤC ㅤD ㅤE ㅤF ㅤG ㅤH ");
         }
     // vacía el tablero
     public void limpiarTablero() {
