@@ -1,4 +1,19 @@
 public class TABLERO {
+    private static final String RESET = "\u001B[0m";
+    private static final String FONDO_BLANCO = "\u001B[107m";
+    private static final String FONDO_NEGRO = "\u001B[100m";
+    private static final String TEXTO_BLANCO = "\u001B[37m";
+    private static final String TEXTO_NEGRO = "\u001B[30m";
+    private static final String BORDE = "\u001B[42m";
+    private static final int ANCHO = 6;
+    
+  public PIEZAS[][] getTablero() {
+        return tablero;
+    }
+
+    public void setTablero(PIEZAS[][] tablero) {
+        this.tablero = tablero;
+    }
 
     private PIEZAS[][] tablero;
 
@@ -7,24 +22,36 @@ public class TABLERO {
         limpiarTablero();
     }
 
-    public PIEZAS[][] getTablero() {
-        return tablero;
-    }
-
-    public void setTablero(PIEZAS[][] tablero) {
-        this.tablero = tablero;
-    }
-
-    public void mostrarTABLERO() {
-        for (int fila = 0; fila < 8; fila++) {
-            for (int col = 0; col < 8; col++) {
-                if (tablero[fila][col] != null) {
-                    System.out.print("[" + tablero[fila][col].getChar() + "]");
-                } else {
-                    System.out.print("[ㅤ]");
-                }
+        public void mostrarTABLERO() {
+            int numerico = 8;
+            for (int i = 0; i < ANCHO + 4; i++) {
+                System.out.print(BORDE + " ㅤ " + RESET);
             }
             System.out.println();
+
+            for (int fila = 0; fila < 8; fila++) {
+                System.out.print(BORDE + " ㅤ " + RESET);
+                for (int col = 0; col < 8; col++) {
+                    boolean casillaBlanca = (fila + col) % 2 ==0;
+                    String fondo = casillaBlanca ? FONDO_BLANCO : FONDO_NEGRO;
+
+                    PIEZAS pieza = tablero[fila][col];
+                    if (pieza != null) {
+                        String colorTexto = pieza.isBlanco() ? TEXTO_NEGRO : TEXTO_BLANCO;
+                        System.out.print(fondo + colorTexto + " " + pieza.getChar() + " " + RESET);
+                    } else {
+                        System.out.print(fondo + " ㅤ " + RESET);
+                    }
+
+                }
+                System.out.print(BORDE +TEXTO_NEGRO +numerico-- + " ㅤ" + RESET);
+                System.out.println();
+            }
+            for (int i = 0; i < ANCHO + 4; i++) {
+                System.out.print(BORDE + " ㅤ " + RESET);
+            }
+            System.out.println();
+            System.out.println("ㅤㅤㅤA ㅤB ㅤC ㅤD ㅤE ㅤF ㅤG ㅤH ");
         }
     }
 
