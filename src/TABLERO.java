@@ -53,7 +53,7 @@ public class TABLERO {
             System.out.println();
             System.out.println("ㅤㅤㅤA ㅤB ㅤC ㅤD ㅤE ㅤF ㅤG ㅤH ");
         }
-    }
+    
 
     // vacía el tablero
     public void limpiarTablero() {
