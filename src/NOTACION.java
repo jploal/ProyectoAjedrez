@@ -1,5 +1,5 @@
 public class NOTACION {
-//Convertir a algebraico
+    //Convertir a algebraico
     public static int col(char letra) {
         return letra - 'a';
     }

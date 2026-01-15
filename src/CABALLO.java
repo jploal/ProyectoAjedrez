@@ -1,5 +1,6 @@
 public class CABALLO extends PIEZAS{
     public CABALLO(int x, int y, boolean blanco, TABLERO tablero) {
+
         super(x, y, blanco, tablero);
     }
     @Override

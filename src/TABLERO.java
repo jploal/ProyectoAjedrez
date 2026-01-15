@@ -120,7 +120,7 @@ public class TABLERO {
 
         return true;
     }
-
+ // ??????
     public boolean caminoLibre(int x1, int y1, int x2, int y2) {
         int dx = Integer.compare(x2, x1);
         int dy = Integer.compare(y2, y1);
@@ -134,9 +134,9 @@ public class TABLERO {
             y += dy;
         }
 
-        return true; // ✅ falta este return
+        return true;
     }
-
+    //Alguna pieza se puede mover hasta el rey enemigo
     public boolean hayJaque(boolean reyBlanco) {
 
         REY rey = null;
@@ -164,7 +164,7 @@ public class TABLERO {
 
                     if (!p.movimientoValido(rx, ry)) continue;
 
-                    if (p instanceof CABALLO || p instanceof REY) {
+                    if (p instanceof CABALLO || p instanceof REY) {  //arreglar if p instance of REY pierde color actual
                         return true;
                     }
 

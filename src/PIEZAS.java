@@ -3,7 +3,7 @@ public abstract class PIEZAS {
     private boolean blanco;
     private int x;
     private int y;
-    private TABLERO tablero;
+    protected TABLERO tablero;
 
     public int getX() {
         return x;
@@ -37,16 +37,14 @@ public abstract class PIEZAS {
     }
     public abstract char getChar();
     public abstract boolean movimientoValido(int nuevaX, int nuevaY);
-
     public boolean mover(int nuevaX, int nuevaY) {
         if (movimientoValido(nuevaX, nuevaY)) {
-            // actualizar tablero
+            // actualizar tablero: vaciar la casilla actual y mover la pieza
             tablero.getTablero()[x][y] = null;
             tablero.getTablero()[nuevaX][nuevaY] = this;
-
-            // actualizar coordenadas de la pieza
             x = nuevaX;
             y = nuevaY;
+
             return true;
         }
         return false;
