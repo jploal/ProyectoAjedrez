@@ -1,18 +1,15 @@
 public class NOTACION {
-//Convertir a algebraico
     public static int col(char letra) {
-        return letra - 'a';
+        return Character.toLowerCase(letra) - 'a';
     }
 
     public static int fila(char numero) {
         return 8 - (numero - '0');
     }
-    //creacion con algebraico
-    public static void crear(String texto, boolean blanco, TABLERO t) {
 
+    public static void crear(String texto, boolean blanco, TABLERO t) {
         char primera = texto.charAt(0);
         char colChar, filaChar;
-
         String tipo;
 
         if (Character.isUpperCase(primera)) {
@@ -20,7 +17,7 @@ public class NOTACION {
             colChar = texto.charAt(1);
             filaChar = texto.charAt(2);
         } else {
-            tipo = "P"; // peón
+            tipo = "P";
             colChar = texto.charAt(0);
             filaChar = texto.charAt(1);
         }
