@@ -34,4 +34,4 @@ public class NOTACION {
             case "P" -> new PEON(x, y, blanco, t);
         }
     }
-}
+

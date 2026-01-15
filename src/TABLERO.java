@@ -36,9 +36,15 @@ public class TABLERO {
                 } else {
                     System.out.print(fondo + " ㅤ " + RESET);
                 }
+                System.out.print(BORDE +TEXTO_NEGRO +numerico-- + " ㅤ" + RESET);
+                System.out.println();
+            }
+            for (int i = 0; i < ANCHO + 4; i++) {
+                System.out.print(BORDE + " ㅤ " + RESET);
             }
             System.out.print(BORDE + TEXTO_NEGRO + numerico-- + " ㅤ" + RESET);
             System.out.println();
+            System.out.println("ㅤㅤㅤA ㅤB ㅤC ㅤD ㅤE ㅤF ㅤG ㅤH ");
         }
         for (int i = 0; i < ANCHO + 4; i++) System.out.print(BORDE + " ㅤ " + RESET);
         System.out.println();
