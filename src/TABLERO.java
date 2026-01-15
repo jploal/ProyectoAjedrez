@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class TABLERO {
     private static final String RESET = "\u001B[0m";
     private static final String FONDO_BLANCO = "\u001B[107m";
@@ -6,14 +9,6 @@ public class TABLERO {
     private static final String TEXTO_NEGRO = "\u001B[30m";
     private static final String BORDE = "\u001B[42m";
     private static final int ANCHO = 6;
-    
-  public PIEZAS[][] getTablero() {
-        return tablero;
-    }
-
-    public void setTablero(PIEZAS[][] tablero) {
-        this.tablero = tablero;
-    }
 
     private PIEZAS[][] tablero;
 
@@ -22,27 +17,24 @@ public class TABLERO {
         limpiarTablero();
     }
 
-        public void mostrarTABLERO() {
-            int numerico = 8;
-            for (int i = 0; i < ANCHO + 4; i++) {
-                System.out.print(BORDE + " ㅤ " + RESET);
-            }
-            System.out.println();
+    public PIEZAS[][] getTablero() { return tablero; }
+    public void setTablero(PIEZAS[][] tablero) { this.tablero = tablero; }
 
-            for (int fila = 0; fila < 8; fila++) {
-                System.out.print(BORDE + " ㅤ " + RESET);
-                for (int col = 0; col < 8; col++) {
-                    boolean casillaBlanca = (fila + col) % 2 ==0;
-                    String fondo = casillaBlanca ? FONDO_BLANCO : FONDO_NEGRO;
-
-                    PIEZAS pieza = tablero[fila][col];
-                    if (pieza != null) {
-                        String colorTexto = pieza.isBlanco() ? TEXTO_NEGRO : TEXTO_BLANCO;
-                        System.out.print(fondo + colorTexto + " " + pieza.getChar() + " " + RESET);
-                    } else {
-                        System.out.print(fondo + " ㅤ " + RESET);
-                    }
-
+    public void mostrarTABLERO() {
+        int numerico = 8;
+        for (int i = 0; i < ANCHO + 4; i++) System.out.print(BORDE + " ㅤ " + RESET);
+        System.out.println();
+        for (int fila = 0; fila < 8; fila++) {
+            System.out.print(BORDE + " ㅤ " + RESET);
+            for (int col = 0; col < 8; col++) {
+                boolean casillaBlanca = (fila + col) % 2 == 0;
+                String fondo = casillaBlanca ? FONDO_BLANCO : FONDO_NEGRO;
+                PIEZAS pieza = tablero[fila][col];
+                if (pieza != null) {
+                    String colorTexto = pieza.isBlanco() ? TEXTO_NEGRO : TEXTO_BLANCO;
+                    System.out.print(fondo + colorTexto + " " + pieza.getChar() + " " + RESET);
+                } else {
+                    System.out.print(fondo + " ㅤ " + RESET);
                 }
                 System.out.print(BORDE +TEXTO_NEGRO +numerico-- + " ㅤ" + RESET);
                 System.out.println();
@@ -50,159 +42,123 @@ public class TABLERO {
             for (int i = 0; i < ANCHO + 4; i++) {
                 System.out.print(BORDE + " ㅤ " + RESET);
             }
+            System.out.print(BORDE + TEXTO_NEGRO + numerico-- + " ㅤ" + RESET);
             System.out.println();
             System.out.println("ㅤㅤㅤA ㅤB ㅤC ㅤD ㅤE ㅤF ㅤG ㅤH ");
         }
-    
+        for (int i = 0; i < ANCHO + 4; i++) System.out.print(BORDE + " ㅤ " + RESET);
+        System.out.println();
+        System.out.println("ㅤㅤㅤA ㅤB ㅤC ㅤD ㅤE ㅤF ㅤG ㅤH ");
+    }
 
-    // vacía el tablero
     public void limpiarTablero() {
         for (int i = 0; i < 8; i++)
             for (int j = 0; j < 8; j++)
                 tablero[i][j] = null;
     }
 
-    // Traduce algebraico a array
     public PIEZAS getPiezaDesdeAlgebraica(String pos) {
         int x, y;
         if (pos.length() == 3) {
             y = NOTACION.col(pos.charAt(1));
             x = NOTACION.fila(pos.charAt(2));
-        } else { // e2
+        } else {
             y = NOTACION.col(pos.charAt(0));
             x = NOTACION.fila(pos.charAt(1));
         }
+        if (x < 0 || x > 7 || y < 0 || y > 7) return null;
         return tablero[x][y];
     }
 
-    public boolean validarComposicion() {
+    // BUSCADOR CORREGIDO: Compara por Clase de Pieza, no por dibujo
+    public List<PIEZAS> buscarCandidatos(char tipoChar, char filtro, boolean esBlanco) {
+        List<PIEZAS> candidatos = new ArrayList<>();
+        boolean esFiltroFila = Character.isDigit(filtro);
+        int valorFiltro = esFiltroFila ? NOTACION.fila(filtro) : NOTACION.col(filtro);
+        char tipo = Character.toUpperCase(tipoChar);
 
-        int reyesBlancos = 0;
-        int reyesNegros = 0;
-        int peonesBlancos = 0;
-        int peonesNegros = 0;
-        int torresBlancas = 0, torresNegras = 0;
-        int caballosBlancos = 0, caballosNegras = 0;
-        int alfilesBlancos = 0, alfilesNegras = 0;
-        int damasBlancas = 0, damasNegras = 0;
-
-        boolean[][] ocupadas = new boolean[8][8];
-        // recorrer tablero leyendo instancias de objetos, cuenta cada tipo de pieza
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 PIEZAS p = tablero[i][j];
-                if (p != null) {
-
-                    if (ocupadas[i][j]) return false; // duplicado
-                    ocupadas[i][j] = true;
-
-                    if (p instanceof REY) {
-                        if (p.isBlanco()) reyesBlancos++;
-                        else reyesNegros++;
+                if (p != null && p.isBlanco() == esBlanco) {
+                    boolean coincide = false;
+                    switch (tipo) {
+                        case 'T' -> coincide = (p instanceof TORRE);
+                        case 'C' -> coincide = (p instanceof CABALLO);
+                        case 'A' -> coincide = (p instanceof ALFIL);
+                        case 'D' -> coincide = (p instanceof DAMA);
+                        case 'R' -> coincide = (p instanceof REY);
+                        case 'P' -> coincide = (p instanceof PEON);
                     }
-
-                    if (p instanceof PEON) {
-                        if (p.isBlanco()) peonesBlancos++;
-                        else peonesNegros++;
-                    }
-
-                    if (p instanceof TORRE) {
-                        if (p.isBlanco()) torresBlancas++;
-                        else torresNegras++;
-                    }
-
-                    if (p instanceof CABALLO) {
-                        if (p.isBlanco()) caballosBlancos++;
-                        else caballosNegras++;
-                    }
-
-                    if (p instanceof ALFIL) {
-                        if (p.isBlanco()) alfilesBlancos++;
-                        else alfilesNegras++;
-                    }
-
-                    if (p instanceof DAMA) {
-                        if (p.isBlanco()) damasBlancas++;
-                        else damasNegras++;
+                    if (coincide) {
+                        if (esFiltroFila && i == valorFiltro) candidatos.add(p);
+                        else if (!esFiltroFila && j == valorFiltro) candidatos.add(p);
                     }
                 }
             }
         }
+        return candidatos;
+    }
 
-        // Validar reyes
+    public boolean validarComposicion() {
+        int reyesBlancos = 0, reyesNegros = 0, peonesBlancos = 0, peonesNegros = 0;
+        int torresBlancas = 0, torresNegras = 0, caballosBlancos = 0, caballosNegras = 0;
+        int alfilesBlancos = 0, alfilesNegras = 0, damasBlancas = 0, damasNegras = 0;
+        boolean[][] ocupadas = new boolean[8][8];
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                PIEZAS p = tablero[i][j];
+                if (p != null) {
+                    if (ocupadas[i][j]) return false;
+                    ocupadas[i][j] = true;
+                    if (p instanceof REY) { if (p.isBlanco()) reyesBlancos++; else reyesNegros++; }
+                    if (p instanceof PEON) { if (p.isBlanco()) peonesBlancos++; else peonesNegros++; }
+                    if (p instanceof TORRE) { if (p.isBlanco()) torresBlancas++; else torresNegras++; }
+                    if (p instanceof CABALLO) { if (p.isBlanco()) caballosBlancos++; else caballosNegras++; }
+                    if (p instanceof ALFIL) { if (p.isBlanco()) alfilesBlancos++; else alfilesNegras++; }
+                    if (p instanceof DAMA) { if (p.isBlanco()) damasBlancas++; else damasNegras++; }
+                }
+            }
+        }
         if (reyesBlancos != 1 || reyesNegros != 1) return false;
-
-        // Validar peones
         if (peonesBlancos > 8 || peonesNegros > 8) return false;
-
-        // Si hay 8 peones, no puede haber piezas superiores adicionales
-        if (peonesBlancos == 8) {
-            if (torresBlancas > 2 || caballosBlancos > 2 || alfilesBlancos > 2 || damasBlancas > 1)
-                return false;
-        }
-        if (peonesNegros == 8) {
-            if (torresNegras > 2 || caballosNegras > 2 || alfilesNegras > 2 || damasNegras > 1)
-                return false;
-        }
-
+        if (peonesBlancos == 8 && (torresBlancas > 2 || caballosBlancos > 2 || alfilesBlancos > 2 || damasBlancas > 1)) return false;
+        if (peonesNegros == 8 && (torresNegras > 2 || caballosNegras > 2 || alfilesNegras > 2 || damasNegras > 1)) return false;
         return true;
     }
 
     public boolean caminoLibre(int x1, int y1, int x2, int y2) {
         int dx = Integer.compare(x2, x1);
         int dy = Integer.compare(y2, y1);
-
-        int x = x1 + dx;
-        int y = y1 + dy;
-
+        int x = x1 + dx; int y = y1 + dy;
         while (x != x2 || y != y2) {
             if (tablero[x][y] != null) return false;
-            x += dx;
-            y += dy;
+            x += dx; y += dy;
         }
-
-        return true; 
+        return true;
     }
 
     public boolean hayJaque(boolean reyBlanco) {
-
-        REY rey = null;
-
+        PIEZAS rey = null;Refactor TABLERO class for clarity and efficiency
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 PIEZAS p = tablero[i][j];
-                if (p instanceof REY && p.isBlanco() == reyBlanco) {
-                    rey = (REY) p;
-                }
+                if (p instanceof REY && p.isBlanco() == reyBlanco) rey = p;
             }
         }
-
         if (rey == null) return false;
-
-        int rx = rey.getX();
-        int ry = rey.getY();
-
+        int rx = rey.getX(); int ry = rey.getY();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-
                 PIEZAS p = tablero[i][j];
-
                 if (p != null && p.isBlanco() != reyBlanco) {
-
                     if (!p.movimientoValido(rx, ry)) continue;
-
-                    if (p instanceof CABALLO || p instanceof REY) {
-                        return true;
-                    }
-
-                    if (caminoLibre(p.getX(), p.getY(), rx, ry)) {
-                        return true;
-                    }
+                    if (p instanceof CABALLO || p instanceof REY) return true;
+                    if (caminoLibre(p.getX(), p.getY(), rx, ry)) return true;
                 }
             }
         }
-
         return false;
     }
-
 }
