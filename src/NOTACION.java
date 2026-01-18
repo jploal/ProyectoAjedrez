@@ -12,7 +12,9 @@ public class NOTACION {
         char primera = texto.charAt(0);
         char colChar, filaChar;
         String tipo;
-
+        if (texto.length() < 2 || (Character.isUpperCase(texto.charAt(0)) && texto.length() < 3)) {
+    throw new IllegalArgumentException("Notación inválida");
+}
         if (Character.isUpperCase(primera)) {
             tipo = String.valueOf(primera);
             colChar = texto.charAt(1);
