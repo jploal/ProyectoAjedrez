@@ -7,7 +7,11 @@ public class ALFIL extends PIEZAS{
         int dx = Math.abs(nuevaX - getX());
         int dy = Math.abs(nuevaY - getY());
 
-        return dx == dy && dx != 0;
+        if (dx == dy && dx != 0) {
+            return tablero.caminoLibre(getX(), getY(), nuevaX, nuevaY);
+        }
+
+        return false;
     }
 
     @Override

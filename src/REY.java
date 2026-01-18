@@ -8,6 +8,7 @@ public class REY extends PIEZAS{
         int dy = Math.abs(nuevaY - getY());
 
         return dx <= 1 && dy <= 1 && (dx + dy != 0);
+
     }
 
     @Override

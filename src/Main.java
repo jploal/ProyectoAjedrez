@@ -5,7 +5,23 @@ public class Main {
         }
         /*
         Ejemplo de creacion de tablero
-        Rg1, Tf1, h2, g2, f2, d4, e4, Ce5, a4, b3, c2, Ab2, Ta1
 
-        Rc8, Td8, a7, b7, c7, Ae6, d5, e5, f7, g6, Ag7, h7, Th8.
+        Prueba de peones, cuando hay ambigüedad para comer
+        Re1, f4
+        Re8, e5
+        blancas
+        e5 error, fe5 o de5 correcto
+
+        Prueba alfiles
+        Re1, e3
+        Re8, Ag5, Ab6
+        negras
+
+
+        Re1,
+        Re8,
+
+
+        Re1,
+        Re8,
         */
