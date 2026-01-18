@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class PEON extends PIEZAS {
 
     public PEON(int x, int y, boolean blanco, TABLERO tablero) {
@@ -50,5 +52,29 @@ public class PEON extends PIEZAS {
             return true;
         }
         return false;
+    }
+    public void coronar(TABLERO tablero){
+        int fila= this.getX();
+        int columna= this.getY();
+        if ((this.isBlanco() && fila ==0) || (!this.isBlanco() && fila ==7)){
+
+            System.out.println("Tu peón ha llegado al final del tablero");
+            System.out.println("Elije en que pieza lo quieres coronar: T/A/C/D (cualquier otro caracter sera Dama)");
+
+            Scanner sc = new Scanner(System.in);
+            String coronacion= sc.next().toUpperCase();
+            //CREA PIEZA CORONADA, SIN ESTAR EN EL TABLERO, ESTA SE CREARA CON LAS COORDENADAS DEL PEON
+            PIEZAS coronada;
+
+            switch (coronacion) {
+                case "T" -> coronada = new TORRE(fila,columna,this.isBlanco(), tablero);
+                case "C" -> coronada = new CABALLO(fila,columna,this.isBlanco(), tablero);
+                case "A" -> coronada = new ALFIL(fila,columna,this.isBlanco(), tablero);
+                default -> coronada = new DAMA(fila,columna,this.isBlanco(), tablero);
+            }
+            //HACE SET A LA PIEZA EN ESA FILA Y COLUMNA, ESTO SE TIENE QUE HACER A TRAVES DE UN PUBLIC DE TABLERO
+            tablero.setPieza(fila, columna,coronada);
+            System.out.println("Peon Coronado en " + coronacion );
+        }
     }
 }

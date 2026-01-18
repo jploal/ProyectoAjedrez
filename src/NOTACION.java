@@ -1,7 +1,7 @@
 public class NOTACION {
     //Convertir a algebraico
     public static int col(char letra) {
-        return letra - 'a';
+        return letra - 'a'; //  'a' -> 'h'
     }
 
     public static int fila(char numero) {

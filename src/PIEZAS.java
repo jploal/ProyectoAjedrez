@@ -29,8 +29,8 @@ public abstract class PIEZAS {
     }
 
     public PIEZAS(int x, int y,boolean blanco, TABLERO tablero) {
-        this.x = x;
-        this.y = y;
+        this.x = x; //fila
+        this.y = y; //columna
         this.blanco=blanco;
         this.tablero=tablero;
         tablero.getTablero()[x][y] = this;

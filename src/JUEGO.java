@@ -86,7 +86,6 @@ public class JUEGO {
                     entradaValida = true;
                 }
                 else if (turno.equals("negras")) {
-                    turnoblancas = false;
                     entradaValida = true;
                 }
                 else {
@@ -99,55 +98,103 @@ public class JUEGO {
 
 
     //Movimiento de la pieza elegida
-        private static void ejecutarMovimiento(boolean blancasTurno) {
-            System.out.println((blancasTurno ? "Blancas" : "Negras") + " mueve:");
-            System.out.println("Introduce movimiento en notación algebraica (ej: e2 e4):");
+    private static void ejecutarMovimiento(boolean blancasTurno) {
+        System.out.println((blancasTurno ? "Blancas" : "Negras") + " mueve:");
+        System.out.println("Introduce movimiento en notación algebraica (ej: e2, Af3, Ce3, Cce3):");
 
-            String desde = sc.next();
-            String hasta = sc.next();
+        String mov = sc.next().trim();
+        PIEZAS p = null;
+        char tipo;
+        int xDest = -1, yDest = -1;
 
-            PIEZAS p = tablero.getPiezaDesdeAlgebraica(desde);
-            PIEZAS h = tablero.getPiezaDesdeAlgebraica(hasta);
-            //coger color de la pieza
+        try {
+            if (Character.isUpperCase(mov.charAt(0))) {
+                // Pieza que no es peón
+                tipo = mov.charAt(0);
 
-            // Si no hay pieza en la casilla seleccionada
-            if (p == null) {
-                System.out.println("Movimiento inválido: no hay pieza en " + desde);
-                System.out.println((blancasTurno ? "Blancas" : "Negras") + " ha perdido.");
-                System.exit(0); // termina la partida
-            }
-            // Si hay pieza en la casilla pero es del mismo color (no se puede mover)
-            if (h != null){
-                if (p.isBlanco()==h.isBlanco()){
-                System.out.println("Movimiento invalido: ya ha una pieza de tu color en " + hasta);
-                System.out.println((blancasTurno ? "Blancas" : "Negras") + " ha perdido.");
-                System.exit(0);// termina la partida
+                if (mov.length() == 3) { // Ce3
+                    yDest = NOTACION.col(mov.charAt(1));
+                    xDest = NOTACION.fila(mov.charAt(2));
+                    validarIndices(xDest, yDest, mov);
+
+                    p = tablero.buscarPiezaClase(tipo, xDest, yDest, blancasTurno);
+
+                } else if (mov.length() == 4) {  //Cce3 o C2e3
+                    char diferencia = mov.charAt(1);
+                    yDest = NOTACION.col(mov.charAt(2));
+                    xDest = NOTACION.fila(mov.charAt(3));
+                    validarIndices(xDest, yDest, mov);
+
+                    p = tablero.piezaAmbigua(tipo, diferencia, xDest, yDest, blancasTurno);
+
+                } else if (mov.length() == 5) { // movimiento completo Cc5d7
+                    int xOrigen = NOTACION.fila(mov.charAt(1));
+                    int yOrigen = NOTACION.col(mov.charAt(2));
+                    xDest = NOTACION.fila(mov.charAt(3));
+                    yDest = NOTACION.col(mov.charAt(4));
+                    validarIndices(xOrigen, yOrigen, mov);
+                    validarIndices(xDest, yDest, mov);
+
+                    p = tablero.getPieza(xOrigen, yOrigen);
+                    if (p == null || !p.movimientoValido(xDest, yDest)) {
+                        throw new IllegalArgumentException();
+                    }
+                    p.mover(xDest, yDest);
+                    p = null; // ya movida, salimos
+                }
+
+            } else { // Peón
+                if (mov.length() == 2) { // e4
+                    yDest = NOTACION.col(mov.charAt(0));
+                    xDest = NOTACION.fila(mov.charAt(1));
+                    validarIndices(xDest, yDest, mov);
+
+                    p = tablero.buscarPiezaClase('P', xDest, yDest, blancasTurno);
+
+                } else if (mov.length() == 3) { // aa3 (ambiguedad por columna)
+                    char diferencia = mov.charAt(0);
+                    yDest = NOTACION.col(mov.charAt(1));
+                    xDest = NOTACION.fila(mov.charAt(2));
+                    validarIndices(xDest, yDest, mov);
+
+                    p = tablero.piezaAmbigua('P', diferencia, xDest, yDest, blancasTurno);
                 }
             }
 
-            // Si la pieza no es del color del turno
-            if (p.isBlanco() != blancasTurno) {
-                System.out.println("Movimiento inválido: esa pieza no corresponde al turno.");
-                System.out.println((blancasTurno ? "Blancas" : "Negras") + " ha perdido.");
-                System.exit(0);
+            if (p == null && mov.length() != 5) {
+                throw new IllegalArgumentException();
             }
 
-            // Traducir destino a índices
-            int xDestino = NOTACION.fila(hasta.charAt(1));
-            int yDestino = NOTACION.col(hasta.charAt(0));
+            // Simular movimiento y verificar jaque
+            if (p != null) {
+                if (!tablero.piezaEsPineada(p, xDest, yDest)) {
+                    System.out.println("Movimiento inválido: te dejas en jaque.");
+                    System.exit(0);
+                }
+                p.mover(xDest, yDest);
 
-            // Validar movimiento según pieza
-            if (!p.mover(xDestino, yDestino)) {
-                System.out.println("Movimiento inválido: no se puede mover " + desde + " a " + hasta);
-                System.out.println((blancasTurno ? "Blancas" : "Negras") + " ha perdido.");
-                System.exit(0);
+                // Coronación si es peón
+                if (p instanceof PEON) {
+                    ((PEON) p).coronar(tablero);
+                }
             }
 
             if (tablero.hayJaque(!blancasTurno)) {
                 System.out.println("¡JAQUE!");
             }
-    
-            }
+
+        } catch (Exception e) {
+            System.out.println("Movimiento inválido o mal formateado: " + mov);
+            System.exit(0);
+        }
+    }
+        //Se asegura de que en los movimientos no se sale del tablero, a9, b0
+    private static void validarIndices(int x, int y, String mov) {
+        if (x < 0 || x > 7 || y < 0 || y > 7) {
+            throw new IllegalArgumentException("Movimiento fuera del tablero: " + mov);
+        }
+    }
 
 }
+
 
