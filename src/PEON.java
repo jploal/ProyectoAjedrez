@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class PEON extends PIEZAS {
+public class PEON extends PIEZAS{
 
     public PEON(int x, int y, boolean blanco, TABLERO tablero) {
         super(x, y, blanco, tablero);
@@ -44,15 +44,6 @@ public class PEON extends PIEZAS {
         return false; // cualquier otro movimiento no válido
     }
 
-
-    public boolean MovimientoP(int nuevaX, int nuevaY) {
-        if (movimientoValido(nuevaX, nuevaY)) {
-            setX(nuevaX);
-            setY(nuevaY);
-            return true;
-        }
-        return false;
-    }
     public void coronar(TABLERO tablero){
         int fila= this.getX();
         int columna= this.getY();
@@ -78,3 +69,4 @@ public class PEON extends PIEZAS {
         }
     }
 }
+

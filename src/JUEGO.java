@@ -1,81 +1,95 @@
 import java.util.Scanner;
 public class JUEGO {
-        private static TABLERO tablero;
-        private static Scanner sc = new Scanner(System.in);
+    private static TABLERO tablero;
+    private static Scanner sc = new Scanner(System.in);
 
-        public static void jugar() {
+    public static void jugar() {
 
-            boolean blancasTurno = inicializarTablero();
+        boolean blancasTurno = inicializarTablero();
 
-            System.out.println("Tablero inicial:");
-            tablero.mostrarTABLERO();
+        System.out.println("Tablero inicial:");
+        tablero.mostrarTABLERO();
 
-            ejecutarMovimiento(blancasTurno);
+        ejecutarMovimiento(blancasTurno);
 
-            System.out.println("Tablero después del movimiento:");
-            tablero.mostrarTABLERO();
-        }
+        System.out.println("Tablero después del movimiento:");
+        tablero.mostrarTABLERO();
+    }
 
-        // ---------------------
-        // Inicializar el tablero con piezas
-        private static boolean inicializarTablero() {
-            tablero = new TABLERO();
-            boolean valido = false;
+    // ---------------------
+    // Inicializar el tablero con piezas
+    private static boolean inicializarTablero() {
+        tablero = new TABLERO();
+        boolean valido = false;
 
-            while (!valido) {
-                System.out.println("Introduce piezas blancas separadas por coma:");
-                String lineaBlancas = sc.nextLine();
-                System.out.println("Introduce piezas negras separadas por coma:");
-                String lineaNegras = sc.nextLine();
+        while (!valido) {
+            System.out.println("Introduce piezas blancas separadas por coma:");
+            String lineaBlancas = sc.nextLine();
+            System.out.println("Introduce piezas negras separadas por coma:");
+            String lineaNegras = sc.nextLine();
 
-                tablero.limpiarTablero();
+            tablero.limpiarTablero();
 
-                try {
-                    for (String s : lineaBlancas.split(",\\s*"))
-                        NOTACION.crear(s.trim(), true, tablero);
+            try {
+                for (String s : lineaBlancas.split(",\\s*"))
+                    NOTACION.crear(s.trim(), true, tablero);
 
-                    for (String s : lineaNegras.split(",\\s*"))
-                        NOTACION.crear(s.trim(), false, tablero);
+                for (String s : lineaNegras.split(",\\s*"))
+                    NOTACION.crear(s.trim(), false, tablero);
 
-                    valido = tablero.validarComposicion();
+                valido = tablero.validarComposicion();
 
-                    if (!valido) {
-                        System.out.println("Composición inválida, vuelva a introducir todas las piezas.");
-                        continue;
-                    }
-
-                    boolean jaqueBlancas = tablero.hayJaque(true);
-                    boolean jaqueNegras  = tablero.hayJaque(false);
-
-                    if (jaqueBlancas)
-                        System.out.println("Las blancas están en jaque.");
-
-                    if (jaqueNegras)
-                        System.out.println("Las negras están en jaque.");
-
-                    if (jaqueBlancas && jaqueNegras) {
-                        System.out.println("Posición inválida: ambos reyes están en jaque.");
-                        valido = false;
-                    }
-
-                    // si está en jaque, mueve ese color
-                    if (jaqueBlancas) return true;    // blancas
-                    if (jaqueNegras)  return false;   // negras
-
-                    return pedirTurno();
-
-
-                } catch (Exception e) {
-                    System.out.println("Entrada inválida, vuelva a intentarlo.");
-                    valido = false;
+                if (!valido) {
+                    System.out.println("Composición inválida, vuelva a introducir todas las piezas.");
+                    continue;
                 }
-            }return true;
+
+                boolean jaqueBlancas = tablero.hayJaque(true);
+                boolean jaqueNegras  = tablero.hayJaque(false);
+
+                if (jaqueBlancas)
+                    System.out.println("Las blancas están en jaque.");
+
+                if (jaqueNegras)
+                    System.out.println("Las negras están en jaque.");
+                // si está en jaque, mueve ese color
+                if (jaqueBlancas) return true;    // blancas
+                if (jaqueNegras)  return false;   // negras
+
+                return pedirTurno();
+
+
+            } catch (Exception e) {
+                System.out.println("Entrada inválida, vuelva a intentarlo.");
+                valido = false;
+            }
+        }return true;
+    }
+
+    // Pedir que bando juega
+    private static boolean pedirTurno() {
+        boolean turnoblancas = false;
+        boolean entradaValida = false;
+
+        while (!entradaValida) {
+            System.out.println("¿Qué bando juega? (blancas/negras):");
+            String turno = sc.nextLine().trim().toLowerCase();
+
+            if (turno.equals("blancas")) {
+                turnoblancas = true;
+                entradaValida = true;
+            }
+            else if (turno.equals("negras")) {
+                entradaValida = true;
+            }
+            else {
+                System.out.println("Entrada no válida, escribe 'blancas' o 'negras'.");
+            }
         }
 
-        // Pedir que bando juega
-        private static boolean pedirTurno() {
-            boolean turnoblancas = false;
-            boolean entradaValida = false;
+        return turnoblancas;
+    }
+
 
     //Movimiento de la pieza elegida
     private static void ejecutarMovimiento(boolean blancasTurno) {
@@ -108,10 +122,10 @@ public class JUEGO {
                     p = tablero.piezaAmbigua(tipo, diferencia, xDest, yDest, blancasTurno);
 
                 } else if (mov.length() == 5) { // movimiento completo Cc5d7
-                    int xOrigen = NOTACION.fila(mov.charAt(1));
-                    int yOrigen = NOTACION.col(mov.charAt(2));
-                    xDest = NOTACION.fila(mov.charAt(3));
-                    yDest = NOTACION.col(mov.charAt(4));
+                    int yOrigen = NOTACION.col(mov.charAt(1));
+                    int xOrigen = NOTACION.fila(mov.charAt(2));
+                    yDest = NOTACION.col(mov.charAt(3));
+                    xDest = NOTACION.fila(mov.charAt(4));
                     validarIndices(xOrigen, yOrigen, mov);
                     validarIndices(xDest, yDest, mov);
 
@@ -171,7 +185,7 @@ public class JUEGO {
             System.exit(0);
         }
     }
-        //Se asegura de que en los movimientos no se sale del tablero, a9, b0
+    //Se asegura de que en los movimientos no se sale del tablero, a9, b0
     private static void validarIndices(int x, int y, String mov) {
         if (x < 0 || x > 7 || y < 0 || y > 7) {
             throw new IllegalArgumentException("Movimiento fuera del tablero: " + mov);
@@ -182,5 +196,4 @@ public class JUEGO {
         if (tablero.hayJaque(!blancasTurno)) System.out.println("¡JAQUE!");
     }
 }
-
 

@@ -1,13 +1,13 @@
 public class Main {
     public static void main(String[] args) {
-                JUEGO.jugar();
-            }
-        }
+        JUEGO.jugar();
+    }
+}
         /*
         Ejemplo de creacion de tablero
 
         Prueba de peones, cuando hay ambigüedad para comer
-        Re1, f4
+        Re1, f4, d4
         Re8, e5
         blancas
         e5 error, fe5 o de5 correcto
@@ -17,11 +17,6 @@ public class Main {
         Re8, Ag5, Ab6
         negras
 
-
-        Re1,
-        Re8,
-
-
-        Re1,
-        Re8,
-        */
+        Prueba ambiguedad caballo
+        Rc1, Cc3, Cd4, a2, b2
+        Rg8, a7, b7*/
