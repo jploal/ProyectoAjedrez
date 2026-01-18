@@ -158,6 +158,9 @@ public class JUEGO {
             if (p == null && mov.length() != 5) {
                 throw new IllegalArgumentException();
             }
+        } else {
+            p = tablero.getPiezaDesdeAlgebraica(desde);
+        }
 
             // Simular movimiento y verificar jaque
             if (p != null) {
@@ -189,7 +192,8 @@ public class JUEGO {
         }
     }
 
+        System.out.println("Movimiento correcto.");
+        if (tablero.hayJaque(!blancasTurno)) System.out.println("¡JAQUE!");
+    }
 }
-
-
 

@@ -7,8 +7,8 @@ public class DAMA extends PIEZAS{
             int dx = Math.abs(nuevaX - getX());
             int dy = Math.abs(nuevaY - getY());
 
-            // combina TORRE y ALFIL
-            return (dx == dy && dx != 0) || (dx == 0 && dy != 0) || (dx != 0 && dy == 0);
+            return ((dx == dy && dx != 0) || (dx == 0 && dy != 0) || (dx != 0 && dy == 0))
+                    && tablero.caminoLibre(getX(), getY(), nuevaX, nuevaY);
         }
 
         @Override

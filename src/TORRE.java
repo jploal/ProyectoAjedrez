@@ -8,7 +8,10 @@ public class TORRE extends PIEZAS{
         int dy = nuevaY - getY();
 
         // horizontal o vertical puro
-        return (dx == 0 && dy != 0) || (dx != 0 && dy == 0);
+        if (!((dx == 0 && dy != 0) || (dx != 0 && dy == 0))){
+            return false;
+        }
+        return tablero.caminoLibre(getX(), getY(), nuevaX, nuevaY);
     }
     @Override
     public char getChar() {
