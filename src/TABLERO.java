@@ -1,5 +1,4 @@
 public class TABLERO {
-
     private static final String RESET = "\u001B[0m";
     private static final String FONDO_BLANCO = "\u001B[107m";
     private static final String FONDO_NEGRO = "\u001B[100m";
@@ -52,21 +51,20 @@ public class TABLERO {
                 } else {
                     System.out.print(fondo + " ㅤ " + RESET);
                 }
+                System.out.print(BORDE +TEXTO_NEGRO +numerico-- + " ㅤ" + RESET);
+                System.out.println();
             }
             System.out.print(BORDE + TEXTO_NEGRO + numerico-- + " ㅤ" + RESET);
             System.out.println();
+            System.out.println("ㅤㅤㅤA ㅤB ㅤC ㅤD ㅤE ㅤF ㅤG ㅤH ");
         }
         for (int i = 0; i < ANCHO + 4; i++) {
             System.out.print(BORDE + " ㅤ " + RESET);
-        }
-        System.out.println();
-        System.out.println("ㅤㅤㅤA ㅤB ㅤC ㅤD ㅤE ㅤF ㅤG ㅤH ");
     }
 
-    // vacía el tablero
     public void limpiarTablero() {
         for (int i = 0; i < 8; i++)
-            for (int j = 0; j < 8; j++)
+            for (int j = 0; j < 8;   j++)
                 tablero[i][j] = null;
     }
 
@@ -156,77 +154,31 @@ public class TABLERO {
         if (contador == 1) return objetivo;
         return null; // 0 o >1 → inválido
     }
-
     public boolean validarComposicion() {
-
-        int reyesBlancos = 0;
-        int reyesNegros = 0;
-        int peonesBlancos = 0;
-        int peonesNegros = 0;
-        int torresBlancas = 0, torresNegras = 0;
-        int caballosBlancos = 0, caballosNegras = 0;
-        int alfilesBlancos = 0, alfilesNegras = 0;
-        int damasBlancas = 0, damasNegras = 0;
-
+        int reyesBlancos = 0, reyesNegros = 0, peonesBlancos = 0, peonesNegros = 0;
+        int torresBlancas = 0, torresNegras = 0, caballosBlancos = 0, caballosNegras = 0;
+        int alfilesBlancos = 0, alfilesNegras = 0, damasBlancas = 0, damasNegras = 0;
         boolean[][] ocupadas = new boolean[8][8];
-        // recorrer tablero leyendo instancias de objetos, cuenta cada tipo de pieza
+
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 PIEZAS p = tablero[i][j];
                 if (p != null) {
-
-                    if (ocupadas[i][j]) return false; // duplicado
+                    if (ocupadas[i][j]) return false;
                     ocupadas[i][j] = true;
-
-                    if (p instanceof REY) {
-                        if (p.isBlanco()) reyesBlancos++;
-                        else reyesNegros++;
-                    }
-
-                    if (p instanceof PEON) {
-                        if (p.isBlanco()) peonesBlancos++;
-                        else peonesNegros++;
-                    }
-
-                    if (p instanceof TORRE) {
-                        if (p.isBlanco()) torresBlancas++;
-                        else torresNegras++;
-                    }
-
-                    if (p instanceof CABALLO) {
-                        if (p.isBlanco()) caballosBlancos++;
-                        else caballosNegras++;
-                    }
-
-                    if (p instanceof ALFIL) {
-                        if (p.isBlanco()) alfilesBlancos++;
-                        else alfilesNegras++;
-                    }
-
-                    if (p instanceof DAMA) {
-                        if (p.isBlanco()) damasBlancas++;
-                        else damasNegras++;
-                    }
+                    if (p instanceof REY) { if (p.isBlanco()) reyesBlancos++; else reyesNegros++; }
+                    if (p instanceof PEON) { if (p.isBlanco()) peonesBlancos++; else peonesNegros++; }
+                    if (p instanceof TORRE) { if (p.isBlanco()) torresBlancas++; else torresNegras++; }
+                    if (p instanceof CABALLO) { if (p.isBlanco()) caballosBlancos++; else caballosNegras++; }
+                    if (p instanceof ALFIL) { if (p.isBlanco()) alfilesBlancos++; else alfilesNegras++; }
+                    if (p instanceof DAMA) { if (p.isBlanco()) damasBlancas++; else damasNegras++; }
                 }
             }
         }
-
-        // Validar reyes
         if (reyesBlancos != 1 || reyesNegros != 1) return false;
-
-        // Validar peones
         if (peonesBlancos > 8 || peonesNegros > 8) return false;
-
-        // Si hay 8 peones, no puede haber piezas superiores adicionales
-        if (peonesBlancos == 8) {
-            if (torresBlancas > 2 || caballosBlancos > 2 || alfilesBlancos > 2 || damasBlancas > 1)
-                return false;
-        }
-        if (peonesNegros == 8) {
-            if (torresNegras > 2 || caballosNegras > 2 || alfilesNegras > 2 || damasNegras > 1)
-                return false;
-        }
-
+        if (peonesBlancos == 8 && (torresBlancas > 2 || caballosBlancos > 2 || alfilesBlancos > 2 || damasBlancas > 1)) return false;
+        if (peonesNegros == 8 && (torresNegras > 2 || caballosNegras > 2 || alfilesNegras > 2 || damasNegras > 1)) return false;
         return true;
     }
 
@@ -246,8 +198,7 @@ public class TABLERO {
         //while x no sea el x destino(x2) e y no sea la y destino (y2) recorrer las posiciones de "viaje"
         while (x != x2 || y != y2) {
             if (tablero[x][y] != null) return false;
-            x += dx;
-            y += dy;
+            x += dx; y += dy;
         }
 
         return true;
@@ -279,7 +230,6 @@ public class TABLERO {
         //for para recorrer tablero (otra vez)
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-
                 PIEZAS p = tablero[i][j];
                 //registramos piezas
                 //SOLO NOS INTERESA PIEZA CON COLOR DIFERENTE AL REY
@@ -297,7 +247,6 @@ public class TABLERO {
                 }
             }
         }
-
         return false;
     }
 

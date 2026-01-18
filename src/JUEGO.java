@@ -77,26 +77,6 @@ public class JUEGO {
             boolean turnoblancas = false;
             boolean entradaValida = false;
 
-            while (!entradaValida) {
-                System.out.println("¿Qué bando juega? (blancas/negras):");
-                String turno = sc.nextLine().trim().toLowerCase();
-
-                if (turno.equals("blancas")) {
-                    turnoblancas = true;
-                    entradaValida = true;
-                }
-                else if (turno.equals("negras")) {
-                    entradaValida = true;
-                }
-                else {
-                    System.out.println("Entrada no válida, escribe 'blancas' o 'negras'.");
-                }
-            }
-
-            return turnoblancas;
-        }
-
-
     //Movimiento de la pieza elegida
     private static void ejecutarMovimiento(boolean blancasTurno) {
         System.out.println((blancasTurno ? "Blancas" : "Negras") + " mueve:");
@@ -164,6 +144,9 @@ public class JUEGO {
             if (p == null && mov.length() != 5) {
                 throw new IllegalArgumentException();
             }
+        } else {
+            p = tablero.getPiezaDesdeAlgebraica(desde);
+        }
 
             // Simular movimiento y verificar jaque
             if (p != null) {
@@ -195,6 +178,9 @@ public class JUEGO {
         }
     }
 
+        System.out.println("Movimiento correcto.");
+        if (tablero.hayJaque(!blancasTurno)) System.out.println("¡JAQUE!");
+    }
 }
 
 

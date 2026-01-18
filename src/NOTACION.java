@@ -7,12 +7,10 @@ public class NOTACION {
     public static int fila(char numero) {
         return 8 - (numero - '0');
     }
-    //creacion con algebraico
-    public static void crear(String texto, boolean blanco, TABLERO t) {
 
+    public static void crear(String texto, boolean blanco, TABLERO t) {
         char primera = texto.charAt(0);
         char colChar, filaChar;
-
         String tipo;
 
         if (Character.isUpperCase(primera)) {
@@ -20,7 +18,7 @@ public class NOTACION {
             colChar = texto.charAt(1);
             filaChar = texto.charAt(2);
         } else {
-            tipo = "P"; // peón
+            tipo = "P";
             colChar = texto.charAt(0);
             filaChar = texto.charAt(1);
         }
@@ -37,4 +35,4 @@ public class NOTACION {
             case "P" -> new PEON(x, y, blanco, t);
         }
     }
-}
+
