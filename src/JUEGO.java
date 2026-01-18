@@ -5,40 +5,22 @@ public class JUEGO {
 
     public static void jugar() {
 
-<<<<<<< Updated upstream
-            inicializarTablero();
-=======
         boolean blancasTurno = inicializarTablero();
->>>>>>> Stashed changes
 
         System.out.println("Tablero inicial:");
         tablero.mostrarTABLERO();
 
-<<<<<<< Updated upstream
-            boolean blancasTurno = pedirTurno();
-
-            ejecutarMovimiento(blancasTurno);
-=======
         ejecutarMovimiento(blancasTurno);
->>>>>>> Stashed changes
 
         System.out.println("Tablero después del movimiento:");
         tablero.mostrarTABLERO();
     }
 
-<<<<<<< Updated upstream
-        // ---------------------
-        // Inicializar el tablero con piezas
-        private static void inicializarTablero() {
-            tablero = new TABLERO();
-            boolean valido = false;
-=======
     // ---------------------
     // Inicializar el tablero con piezas
     private static boolean inicializarTablero() {
         tablero = new TABLERO();
         boolean valido = false;
->>>>>>> Stashed changes
 
         while (!valido) {
             System.out.println("Introduce piezas blancas separadas por coma:");
@@ -55,28 +37,6 @@ public class JUEGO {
                 for (String s : lineaNegras.split(",\\s*"))
                     NOTACION.crear(s.trim(), false, tablero);
 
-<<<<<<< Updated upstream
-                    valido = tablero.validarComposicion();
-                    if (!valido) {
-                        System.out.println("Composición inválida, vuelva a introducir todas las piezas.");
-                    }
-                } catch (Exception e) {
-                    System.out.println("Entrada inválida, vuelva a intentarlo.");
-                    valido = false;
-                }
-            }
-        }
-        // Pedir que bando juega
-        private static boolean pedirTurno() {
-            while (true) {
-                System.out.println("¿Qué bando juega? (blancas/negras):");
-                String turno = sc.nextLine().trim().toLowerCase();
-                if (turno.equals("blancas")) return true;
-                if (turno.equals("negras")) return false;
-                System.out.println("Entrada no válida, escribe 'blancas' o 'negras'.");
-            }
-        }
-=======
                 valido = tablero.validarComposicion();
 
                 if (!valido) {
@@ -198,50 +158,25 @@ public class JUEGO {
             if (p == null && mov.length() != 5) {
                 throw new IllegalArgumentException();
             }
->>>>>>> Stashed changes
 
-        // Ejecutar un movimiento de la pieza elegida
-        private static void ejecutarMovimiento(boolean blancasTurno) {
-            System.out.println((blancasTurno ? "Blancas" : "Negras") + " mueve:");
-            System.out.println("Introduce movimiento en notación algebraica (ej: e2 e4):");
+            // Simular movimiento y verificar jaque
+            if (p != null) {
+                if (!tablero.piezaEsPineada(p, xDest, yDest)) {
+                    System.out.println("Movimiento inválido: te dejas en jaque.");
+                    System.exit(0);
+                }
+                p.mover(xDest, yDest);
 
-            String desde = sc.next();
-            String hasta = sc.next();
-
-            PIEZAS p = tablero.getPiezaDesdeAlgebraica(desde);
-
-            // Si no hay pieza en la casilla seleccionada
-            if (p == null) {
-                System.out.println("Movimiento inválido: no hay pieza en " + desde);
-                System.out.println((blancasTurno ? "Blancas" : "Negras") + " ha perdido.");
-                System.exit(0); // termina la partida
+                // Coronación si es peón
+                if (p instanceof PEON) {
+                    ((PEON) p).coronar(tablero);
+                }
             }
 
-            // Si la pieza no corresponde al turno
-            if (p.isBlanco() != blancasTurno) {
-                System.out.println("Movimiento inválido: esa pieza no corresponde al turno.");
-                System.out.println((blancasTurno ? "Blancas" : "Negras") + " ha perdido.");
-                System.exit(0);
+            if (tablero.hayJaque(!blancasTurno)) {
+                System.out.println("¡JAQUE!");
             }
 
-<<<<<<< Updated upstream
-            // Traducir destino a índices
-            int xDestino = NOTACION.fila(hasta.charAt(1));
-            int yDestino = NOTACION.col(hasta.charAt(0));
-
-            // Validar movimiento según reglas de la pieza
-            if (!p.mover(xDestino, yDestino)) {
-                System.out.println("Movimiento inválido: no se puede mover " + desde + " a " + hasta);
-                System.out.println((blancasTurno ? "Blancas" : "Negras") + " ha perdido.");
-                System.exit(0);
-            }
-
-            System.out.println("Movimiento realizado: " + desde + " → " + hasta);
-        }
-
-}
-
-=======
         } catch (Exception e) {
             System.out.println("Movimiento inválido o mal formateado: " + mov);
             System.exit(0);
@@ -258,4 +193,3 @@ public class JUEGO {
 
 
 
->>>>>>> Stashed changes

@@ -1,17 +1,7 @@
-import java.util.ArrayList;
-import java.util.List;
+
+
 
 public class TABLERO {
-<<<<<<< Updated upstream
-    public PIEZAS[][] getTablero() {
-        return tablero;
-    }
-
-    public void setTablero(PIEZAS[][] tablero) {
-        this.tablero = tablero;
-    }
-
-=======
 
     private static final String RESET = "\u001B[0m";
     private static final String FONDO_BLANCO = "\u001B[107m";
@@ -20,7 +10,6 @@ public class TABLERO {
     private static final String TEXTO_NEGRO = "\u001B[30m";
     private static final String BORDE = "\u001B[42m";
     private static final int ANCHO = 6;
->>>>>>> Stashed changes
     private PIEZAS[][] tablero;
 
     public TABLERO() {
@@ -28,20 +17,44 @@ public class TABLERO {
         limpiarTablero();
     }
 
-        public void mostrarTABLERO() {
-            for (int fila = 0; fila < 8; fila++) {
-                for (int col = 0; col < 8; col++) {
-                    if (tablero[fila][col] != null) {
-                        System.out.print("[" + tablero[fila][col].getChar() + "]");
-                    } else {
-                        System.out.print("[ㅤ]");
-                    }
-                }
-<<<<<<< Updated upstream
-                System.out.println();
-            }
+    public PIEZAS[][] getTablero() {
+        return tablero;
+    }
+
+    public void setPieza(int x, int y, PIEZAS p) {
+        if (x < 0 || x > 7 || y < 0 || y > 7) return;
+        tablero[x][y]= p;
+    }
+
+    public PIEZAS getPieza(int x, int y) {
+        if (x < 0 || x > 7 || y < 0 || y > 7) return null;
+        return tablero[x][y];
+    }
+
+    public void setTablero(PIEZAS[][] tablero) {
+        this.tablero = tablero;
+    }
+
+    public void mostrarTABLERO() {
+        int numerico = 8;
+        for (int i = 0; i < ANCHO + 4; i++) {
+            System.out.print(BORDE + " ㅤ " + RESET);
         }
-=======
+        System.out.println();
+
+        for (int fila = 0; fila < 8; fila++) {
+            System.out.print(BORDE + " ㅤ " + RESET);
+            for (int col = 0; col < 8; col++) {
+                boolean casillaBlanca = (fila + col) % 2 == 0;
+                String fondo = casillaBlanca ? FONDO_BLANCO : FONDO_NEGRO;
+
+                PIEZAS pieza = tablero[fila][col];
+                if (pieza != null) {
+                    String colorTexto = pieza.isBlanco() ? TEXTO_NEGRO : TEXTO_BLANCO;
+                    System.out.print(fondo + colorTexto + " " + pieza.getChar() + " " + RESET);
+                } else {
+                    System.out.print(fondo + " ㅤ " + RESET);
+                }
             }
             System.out.print(BORDE + TEXTO_NEGRO + numerico-- + " ㅤ" + RESET);
             System.out.println();
@@ -53,33 +66,102 @@ public class TABLERO {
         System.out.println("ㅤㅤㅤA ㅤB ㅤC ㅤD ㅤE ㅤF ㅤG ㅤH ");
     }
 
->>>>>>> Stashed changes
     // vacía el tablero
     public void limpiarTablero() {
         for (int i = 0; i < 8; i++)
             for (int j = 0; j < 8; j++)
                 tablero[i][j] = null;
     }
-    //traduce algebraico a array
-    public PIEZAS getPiezaDesdeAlgebraica(String pos) {
-        int x, y;
-        if (pos.length() == 3) {
-            y = NOTACION.col(pos.charAt(1));
-            x = NOTACION.fila(pos.charAt(2));
-        } else { // e2
-            y = NOTACION.col(pos.charAt(0));
-            x = NOTACION.fila(pos.charAt(1));
+
+    // Traduce algebraico a array
+    public PIEZAS buscarPiezaClase(char tipo, int xDest, int yDest, boolean blancasTurno) {
+
+        //busca de forma algebraica las piezas Ce5 busca caballo que pueda ir a e5
+
+        PIEZAS objetivo = null;
+        int contador = 0;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+
+                PIEZAS p = tablero[i][j];
+                if (p == null) {
+                    continue;
+                }
+                if (p.isBlanco() != blancasTurno) {
+                    continue;
+                }
+
+                boolean alcanza = switch (tipo) {
+                    case 'T' -> p instanceof TORRE;
+                    case 'C' -> p instanceof CABALLO;
+                    case 'A' -> p instanceof ALFIL;
+                    case 'D' -> p instanceof DAMA;
+                    case 'R' -> p instanceof REY;
+                    default -> p instanceof PEON;
+                };
+
+                if (!alcanza) {
+                    continue;
+                }
+
+                if (p.movimientoValido(xDest, yDest) &&
+                        piezaEsPineada(p, xDest, yDest)) {
+
+                    contador++;
+                    objetivo = p;
+                }
+            }
         }
-        return tablero[x][y];
+
+        if (contador == 1) return objetivo;
+        return null;
     }
-<<<<<<< Updated upstream
+
+    public PIEZAS piezaAmbigua(char tipo, char filtro, int xDest, int yDest, boolean blancasTurno) {
+
+        PIEZAS objetivo = null;
+        int contador = 0;
+        //si el filtro es la fila, (C2e3 EJEMPLO)
+        // crea una variable valorFiltro que valora si es la instancia que he elegido
+        boolean esFila = Character.isDigit(filtro);
+        int valorFiltro = esFila ? NOTACION.fila(filtro) : NOTACION.col(filtro);
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+
+                PIEZAS p = tablero[i][j];
+                if (p == null) continue;
+                if (p.isBlanco() != blancasTurno) continue;
+
+                boolean coincide = switch (tipo) {
+                    case 'T' -> p instanceof TORRE;
+                    case 'C' -> p instanceof CABALLO;
+                    case 'A' -> p instanceof ALFIL;
+                    case 'D' -> p instanceof DAMA;
+                    case 'R' -> p instanceof REY;
+                    default -> p instanceof PEON;
+                };
+
+                if (!coincide) continue;
+                // instancia de CABALLO en la fila/columna que yo he puesto en el filtro?
+                if (esFila && p.getX() != valorFiltro) continue;
+                if (!esFila && p.getY() != valorFiltro) continue;
+
+                if (p.movimientoValido(xDest, yDest) &&
+                        piezaEsPineada(p, xDest, yDest)) {
+
+                    contador++;
+                    objetivo = p;
+                }
+            }
+        }
+
+        if (contador == 1) return objetivo;
+        return null; // 0 o >1 → inválido
+    }
+
     public boolean validarComposicion() {
 
-=======
-
-    public boolean validarComposicion() {
-
->>>>>>> Stashed changes
         int reyesBlancos = 0;
         int reyesNegros = 0;
         int peonesBlancos = 0;
@@ -90,11 +172,7 @@ public class TABLERO {
         int damasBlancas = 0, damasNegras = 0;
 
         boolean[][] ocupadas = new boolean[8][8];
-<<<<<<< Updated upstream
-        //recorrer tablero leyendo instancias de objetos, cuenta cada tipo de pieza
-=======
         // recorrer tablero leyendo instancias de objetos, cuenta cada tipo de pieza
->>>>>>> Stashed changes
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 PIEZAS p = tablero[i][j];
@@ -102,13 +180,6 @@ public class TABLERO {
 
                     if (ocupadas[i][j]) return false; // duplicado
                     ocupadas[i][j] = true;
-<<<<<<< Updated upstream
-
-                    if (p instanceof REY) {
-                        if (p.isBlanco()) reyesBlancos++;
-                        else reyesNegros++;
-                    }
-=======
 
                     if (p instanceof REY) {
                         if (p.isBlanco()) reyesBlancos++;
@@ -174,20 +245,10 @@ public class TABLERO {
         // las demás combinaciones son diagonales en las diferentes 4 diagonales para dama y alfil
         PIEZAS p = tablero[x1][y1];
         if (p instanceof CABALLO) return true;
->>>>>>> Stashed changes
 
-                    if (p instanceof PEON) {
-                        if (p.isBlanco()) peonesBlancos++;
-                        else peonesNegros++;
-                    }
+        int dx = Integer.compare(x2, x1);
+        int dy = Integer.compare(y2, y1);
 
-<<<<<<< Updated upstream
-                    if (p instanceof TORRE) {
-                        if (p.isBlanco()) torresBlancas++;
-                        else torresNegras++;
-                    }
-
-=======
         //int x e int y es la primera posiciona a comprobar, la propia (x1,y1) no tiene sentido comprobarla
         int x = x1 + dx;
         int y = y1 + dy;
@@ -235,48 +296,47 @@ public class TABLERO {
                     //REVISAMOS SI ESAS PIEZAS TIENEN MOVIMIENTO VALIDO AL REY
                     if (!p.movimientoValido(rx, ry)) continue;
                     //SI CABALLO AUTOMATICAMENTE JAQUE
->>>>>>> Stashed changes
                     if (p instanceof CABALLO) {
-                        if (p.isBlanco()) caballosBlancos++;
-                        else caballosNegras++;
+                        return true;
                     }
-
-                    if (p instanceof ALFIL) {
-                        if (p.isBlanco()) alfilesBlancos++;
-                        else alfilesNegras++;
-                    }
-
-                    if (p instanceof DAMA) {
-                        if (p.isBlanco()) damasBlancas++;
-                        else damasNegras++;
+                    //SI ES OTRA SUBCLASE HAY QUE ASEGURAR QUE NO HAYA NINGUNA PIEZA BLOQUEANDO, caminoLibre
+                    if (caminoLibre(p.getX(), p.getY(), rx, ry)) {
+                        return true;
                     }
                 }
             }
         }
-<<<<<<< Updated upstream
-=======
 
         return false;
     }
->>>>>>> Stashed changes
 
-        // Validar reyes
-        if (reyesBlancos != 1 || reyesNegros != 1) return false;
+    public boolean piezaEsPineada(PIEZAS p, int destinoX, int destinoY) {
 
-        // Validar peones
-        if (peonesBlancos > 8 || peonesNegros > 8) return false;
+        if (!p.movimientoValido(destinoX, destinoY)) return false;
 
-        // Si hay 8 peones, no puede haber piezas superiores adicionales
-        if (peonesBlancos == 8) {
-            if (torresBlancas > 2 || caballosBlancos > 2 || alfilesBlancos > 2 || damasBlancas > 1)
-                return false;
-        }
-        if (peonesNegros == 8) {
-            if (torresNegras > 2 || caballosNegras > 2 || alfilesNegras > 2 || damasNegras > 1)
-                return false;
-        }
+        int viejaX = p.getX();
+        int viejaY = p.getY();
 
-        return true;
+        //guardo la pieza que hay en destino es decir si pruebo Ae6 y en e6 habia un caballo y es
+        //comido, aunque es una "simulacion" por la condicion del programa ese caballlo desapareceria
+        PIEZAS guardada = tablero[destinoX][destinoY];
+
+        // Simula movimiento
+        tablero[viejaX][viejaY] = null;
+        tablero[destinoX][destinoY] = p;
+        p.setX(destinoX);
+        p.setY(destinoY);
+
+        // hay "auto-jaque" en ese movimiento?
+        boolean jaque = hayJaque(p.isBlanco());
+
+        //devuelvo el tablero a la posicion anterior a la simulacion, el caballo anterior del ejemplo volveria a existir
+        tablero[destinoX][destinoY] = guardada;
+        tablero[viejaX][viejaY] = p;
+        p.setX(viejaX);
+        p.setY(viejaY);
+
+        return !jaque;
     }
 
 
