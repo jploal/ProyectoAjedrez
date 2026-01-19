@@ -49,15 +49,5 @@ public abstract class PIEZAS {
         }
         return false;
     }
-
-    tablero.getTablero()[x][y] = null;
-    tablero.getTablero()[nuevaX][nuevaY] = this;
-
-    x = nuevaX;
-    y = nuevaY;
-
-    return true;
     }
-        }
-}
 
